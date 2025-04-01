@@ -1,25 +1,25 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/nextdb";
+const MONGODB_URL = process.env.MONGODB_URL;
 
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
+if (!MONGODB_URL) {
+  throw new Error(" MONGODB_URL не найден в .env");
 }
 
-let cached = (global as any).mongoose || { conn: null, promise: null };
+let isConnected = false;
 
-export async function connectToDatabase() {
-  if (cached.conn) return cached.conn;
+export const connectDB = async () => {
+  if (isConnected) return;
 
-  if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      } as any)
-      .then((mongoose) => mongoose);
+  try {
+    await mongoose.connect(MONGODB_URL, {
+      dbName: "nextdb",
+    });
+    isConnected = true;
+    console.log("✅ Успешное подключение к MongoDB");
+  } catch (error) {
+    console.error(" Ошибка подключения к MongoDB:", error);
+    throw error;
   }
+};
 
-  cached.conn = await cached.promise;
-  return cached.conn;
-}

@@ -9,6 +9,7 @@ export default function Header() {
         <li><Link href="/spotify">Spotify API</Link></li>
         <li><Link href="/recipes">Recipes</Link></li>
         <li><Link href="/weather">Weather</Link></li>
+        <li><Link href="/posts">Posts</Link></li>
       </ul>
     </nav>
   );

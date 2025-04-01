@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "leaflet": "^1.9.4",
+    "mongodb": "^6.15.0",
     "mongoose": "^8.12.1",
     "next": "15.2.2",
     "react": "^19.0.0",
