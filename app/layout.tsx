@@ -1,12 +1,24 @@
-import Header from "@/components/header";
 import "./globals.css";
+import Header from "@/components/header";
+import AuthProvider from "@/components/AuthProvider"; // 👈 клиентский компонент
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export const metadata = {
+  title: "My Projects",
+  description: "Demo with GitHub, Spotify, Recipes, Weather, Posts, Games",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>
-        <Header />
-        {children}
+        <AuthProvider>
+          <Header />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
