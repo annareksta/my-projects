@@ -40,3 +40,21 @@ export async function POST(req: Request) {
     );
   }
 }
+// ➤ Удалить пост
+export async function DELETE(req: Request) {
+  try {
+    await connectDB();
+    const { id } = await req.json();
+
+    if (!id) {
+      return NextResponse.json({ message: "Не указан ID поста" }, { status: 400 });
+    }
+
+    await Post.findByIdAndDelete(id);
+
+    return NextResponse.json({ message: "Пост удалён" });
+  } catch (error) {
+    console.error("❌ Ошибка при удалении поста:", error);
+    return NextResponse.json({ message: "Ошибка при удалении" }, { status: 500 });
+  }
+}

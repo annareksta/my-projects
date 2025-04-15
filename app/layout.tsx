@@ -1,11 +1,7 @@
 import "./globals.css";
 import Header from "@/components/header";
-import AuthProvider from "@/components/AuthProvider"; // 👈 клиентский компонент
-
-export const metadata = {
-  title: "My Projects",
-  description: "Demo with GitHub, Spotify, Recipes, Weather, Posts, Games",
-};
+import AuthProvider from "@/components/AuthProvider";
+import { FavoritesProvider } from "@/context/FavoritesContext";
 
 export default function RootLayout({
   children,
@@ -16,8 +12,10 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthProvider>
-          <Header />
-          {children}
+          <FavoritesProvider> {/* 👈 оборачиваем */}
+            <Header />
+            {children}
+          </FavoritesProvider>
         </AuthProvider>
       </body>
     </html>

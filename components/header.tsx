@@ -14,7 +14,7 @@ export default function Header() {
         <li><Link href="/weather">Weather</Link></li>
         <li><Link href="/posts">Posts</Link></li>
         <li><Link href="/games">Games</Link></li>
-        <li><Link href="/games/favorites">Favorites</Link></li>
+      
       </ul>
       <AuthButton />
     </nav>

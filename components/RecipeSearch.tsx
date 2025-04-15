@@ -42,7 +42,7 @@ export default function RecipeSearch() {
 
   return (
     <div className={styles.container}>
-      <h1>Recipes</h1>
+      <h1 className="text-2xl font-bold mb-4">Recipes</h1>
 
       {/* Поле ввода + кнопка поиска */}
       <div className={styles.searchSection}>

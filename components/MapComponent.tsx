@@ -1,29 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 
-export default function MapComponent({ lat, lon }: { lat: number; lon: number }) {
-  const [L, setL] = useState<any>(null);
+export default function MapComponent({
+  lat,
+  lon,
+  onClickMap,
+}: {
+  lat: number;
+  lon: number;
+  onClickMap: (city: string) => void;
+}) {
+  const mapRef = useRef<any>(null);
+  const markerRef = useRef<any>(null);
 
   useEffect(() => {
-    import("leaflet").then((leaflet) => {
-      setL(leaflet);
+    const init = async () => {
+      const L = await import("leaflet");
 
-      // ✅ Проверяем, есть ли уже карта в контейнере
-      if (document.getElementById("map")?.hasChildNodes()) {
-        return; // Если карта уже есть, выходим из функции
+      // Prevent duplicate map init
+      if (mapRef.current) {
+        mapRef.current.setView([lat, lon], 10);
+        markerRef.current.setLatLng([lat, lon]);
+        return;
       }
 
-      const map = leaflet.map("map").setView([lat, lon], 10);
-      leaflet
-        .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution: "&copy; OpenStreetMap contributors",
-        })
-        .addTo(map);
+      const map = L.map("map").setView([lat, lon], 10);
+      mapRef.current = map;
 
-      // ✅ Добавляем маркер
-      const icon = new leaflet.Icon({
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+      }).addTo(map);
+
+      const icon = new L.Icon({
         iconUrl: "/leaflet/marker-icon.png",
         shadowUrl: "/leaflet/marker-shadow.png",
         iconSize: [25, 41],
@@ -32,9 +42,41 @@ export default function MapComponent({ lat, lon }: { lat: number; lon: number })
         shadowSize: [41, 41],
       });
 
-      leaflet.marker([lat, lon], { icon }).addTo(map);
-    });
+      const marker = L.marker([lat, lon], { icon }).addTo(map);
+      markerRef.current = marker;
+
+      map.on("click", async (e: any) => {
+        const { lat: newLat, lng: newLon } = e.latlng;
+        marker.setLatLng([newLat, newLon]);
+
+        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${newLat}&lon=${newLon}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const city =
+          data?.address?.city ||
+          data?.address?.town ||
+          data?.address?.village ||
+          data?.address?.state;
+
+        if (city) {
+          onClickMap(city);
+        }
+      });
+    };
+
+    init();
   }, [lat, lon]);
 
-  return <div id="map" style={{ width: "100%", height: "300px", marginTop: "20px" }} />;
+  return (
+    <div
+      id="map"
+      style={{
+        width: "100%",
+        height: "300px",
+        marginBottom: "20px",
+        borderRadius: "8px",
+        overflow: "hidden",
+      }}
+    />
+  );
 }

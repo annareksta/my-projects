@@ -1,0 +1,135 @@
+.wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.title {
+  color: #1db954;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 22px;
+  margin: 20px 0 10px;
+  color: #1db954;
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 250px;
+}
+
+.button {
+  background-color: #1db954;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background-color: #159c46;
+}
+
+.logout {
+  background-color: #e63946;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.logout:hover {
+  background-color: #c71b2a;
+}
+
+.results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.card {
+  background-color: #191414;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 16px;
+  width: 180px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.genres,
+.popularity {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.albums {
+  margin-top: 20px;
+}
+
+.albumGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.albumCard {
+  display: block;
+  text-align: center;
+  width: 140px;
+  text-decoration: none;
+  color: white;
+}
+
+.albumImage {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.albumTitle {
+  font-size: 14px;
+  margin-top: 6px;
+  color: #006e14
+}

@@ -1,27 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 import { Game } from "@/types";
 import styles from "@/styles/games.module.css";
+import { useSession } from "next-auth/react";
+import { useFavorites } from "@/context/FavoritesContext";
+import { useState, useEffect } from "react";
 
 export function GameCard({ game }: { game: Game }) {
   const { data: session } = useSession();
+  const { refreshFavorites } = useFavorites();
   const [liked, setLiked] = useState(false);
 
-  // Проверка, есть ли игра в избранном при загрузке
   useEffect(() => {
     const checkFavorite = async () => {
       if (!session) return;
       const res = await fetch("/api/favorites");
       const data = await res.json();
-      const isFavorite = data.some((fav: any) => fav.gameId === game.id);
-      setLiked(isFavorite);
+      const isFav = data.some((fav: any) => fav.gameId === game.id);
+      setLiked(isFav);
     };
+
     checkFavorite();
   }, [session, game.id]);
 
-  // Добавление / удаление из избранного
   const toggleFavorite = async () => {
     if (!session) {
       alert("Войдите, чтобы добавлять в избранное");
@@ -41,15 +42,13 @@ export function GameCard({ game }: { game: Game }) {
         genres: game.genres.map((g) => g.name),
       }),
     });
+
+    refreshFavorites();
   };
 
   return (
     <div className={styles.card}>
-      <img
-        src={game.background_image}
-        alt={game.name}
-        className={styles.image}
-      />
+      <img src={game.background_image} alt={game.name} className={styles.image} />
       <h3>{game.name}</h3>
       <p>Rating: {game.rating}</p>
       <p>{game.genres.map((g) => g.name).join(", ")}</p>

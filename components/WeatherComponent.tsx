@@ -1,36 +1,56 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ForecastComponent from "@/components/ForecastComponent";
 import MapComponent from "@/components/MapComponent";
 import styles from "@/app/weather/styles.module.css";
 
 const API_KEY = "C762GHQCU2TWHZFGH5P9ZGA8U";
-const BASE_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
+const BASE_URL =
+  "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
 
 export default function WeatherComponent() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState<any | null>(null);
   const [error, setError] = useState("");
+  const [lat, setLat] = useState(55.7558);
+  const [lon, setLon] = useState(37.6173);
 
-  const fetchWeather = async (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        setLat(pos.coords.latitude);
+        setLon(pos.coords.longitude);
+      });
+    }
+  }, []);
+
+  const fetchWeatherByCity = async (cityName: string) => {
     setError("");
-    setWeather(null);
-
     try {
-      const res = await fetch(`${BASE_URL}${city}?key=${API_KEY}&contentType=json`);
+      const res = await fetch(`${BASE_URL}${cityName}?key=${API_KEY}&contentType=json`);
       if (!res.ok) throw new Error("City not found");
       const data = await res.json();
       setWeather(data);
+      setLat(data.latitude);
+      setLon(data.longitude);
+      setCity(data.resolvedAddress);
     } catch (err) {
       setError("City not found. Try again.");
+      setWeather(null);
     }
+  };
+
+  const fetchWeather = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchWeatherByCity(city);
   };
 
   return (
     <div className={styles.container}>
-      <form onSubmit={fetchWeather}>
+      <MapComponent lat={lat} lon={lon} onClickMap={fetchWeatherByCity} />
+
+      <form onSubmit={fetchWeather} className={styles.form}>
         <input
           type="text"
           value={city}
@@ -39,19 +59,23 @@ export default function WeatherComponent() {
           className={styles.input}
           required
         />
-        <button type="submit" className={styles.button}>Go!</button>
+        <button type="submit" className={styles.button}>
+          Go!
+        </button>
       </form>
 
       {error && <p className={styles.error}>{error}</p>}
 
       {weather && (
-        <>
+        <div className={styles.weatherBlock}>
           <h2>Weather in {weather.resolvedAddress}</h2>
-          <p>Temperature: {((weather.currentConditions.temp - 32) * 5 / 9).toFixed(1)}°C</p>
+          <p>
+            Temperature:{" "}
+            {((weather.currentConditions.temp - 32) * 5 / 9).toFixed(1)}°C
+          </p>
           <p>Humidity: {weather.currentConditions.humidity}%</p>
           <ForecastComponent forecast={weather.days} />
-          <MapComponent lat={weather.latitude} lon={weather.longitude} />
-        </>
+        </div>
       )}
     </div>
   );

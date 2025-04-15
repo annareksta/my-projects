@@ -8,11 +8,6 @@
     text-align: center;
   }
   
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-  }
   
   .card {
     background: white;
@@ -40,4 +35,33 @@
   
   .likeButton:hover {
     background-color: #ddd;
+  }
+  .gamesLayout {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+  
+  .grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  
+  .sidebar {
+    width: 300px;
+    position: sticky;
+    top: 2rem;
+  }
+  .favoritesList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .favoritesList li {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
   }
