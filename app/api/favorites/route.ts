@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/utils/authOptions";
+import { authOptions } from "@/lib/authOptions";
 import { connectDB } from "@/lib/mongodb";
 import { Favorite } from "@/models/Favorite";
 
