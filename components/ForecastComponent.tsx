@@ -138,6 +138,8 @@ export default function ForecastComponent({ forecast }: ForecastProps) {
                 id: "horizontalBackground",
                 beforeDraw: (chart) => {
                   const ctx = chart.canvas.getContext("2d");
+                  if (!ctx) return; // 👈 Добавляем защиту
+
                   const gradient = ctx.createLinearGradient(0, 0, chart.width, 0);
 
                   gradient.addColorStop(0, "#0c2233");        // ночь
