@@ -9,7 +9,7 @@ type Game = {
   name: string;
   background_image: string;
   rating: number;
-  genres: { name: string }[];
+  genres: string[];
 };
 
 async function fetchGames(): Promise<Game[]> {
