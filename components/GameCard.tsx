@@ -51,7 +51,7 @@ export function GameCard({ game }: { game: Game }) {
       <img src={game.background_image} alt={game.name} className={styles.image} />
       <h3>{game.name}</h3>
       <p>Rating: {game.rating}</p>
-      <p>{game.genres.map((g) => g.name).join(", ")}</p>
+      <p>{game.genres.join(", ")}</p>
       <button onClick={toggleFavorite} className={styles.likeButton}>
         {liked ? "💖 В избранном" : "🤍 В избранное"}
       </button>
