@@ -1,36 +1,22 @@
 "use client";
 
-import { Game } from "@/types";
-import styles from "@/styles/games.module.css";
-import { useSession } from "next-auth/react";
 import { useFavorites } from "@/context/FavoritesContext";
-import { useState, useEffect } from "react";
+import styles from "@/styles/games.module.css";
+
+type Game = {
+  id: number;
+  name: string;
+  background_image: string;
+  rating: number;
+  genres: string[];
+};
 
 export function GameCard({ game }: { game: Game }) {
-  const { data: session } = useSession();
-  const { refreshFavorites } = useFavorites();
-  const [liked, setLiked] = useState(false);
+  const { favorites, refreshFavorites } = useFavorites();
 
-  useEffect(() => {
-    const checkFavorite = async () => {
-      if (!session) return;
-      const res = await fetch("/api/favorites");
-      const data = await res.json();
-      const isFav = data.some((fav: any) => fav.gameId === game.id);
-      setLiked(isFav);
-    };
-
-    checkFavorite();
-  }, [session, game.id]);
+  const isFavorite = favorites.some((fav) => fav.gameId === game.id);
 
   const toggleFavorite = async () => {
-    if (!session) {
-      alert("Войдите, чтобы добавлять в избранное");
-      return;
-    }
-
-    setLiked(!liked);
-
     await fetch("/api/favorites", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -39,7 +25,7 @@ export function GameCard({ game }: { game: Game }) {
         name: game.name,
         background_image: game.background_image,
         rating: game.rating,
-        genres: game.genres.map((g) => g.name),
+        genres: game.genres, // уже string[]
       }),
     });
 
@@ -52,8 +38,13 @@ export function GameCard({ game }: { game: Game }) {
       <h3>{game.name}</h3>
       <p>Rating: {game.rating}</p>
       <p>{game.genres.join(", ")}</p>
-      <button onClick={toggleFavorite} className={styles.likeButton}>
-        {liked ? "💖 В избранном" : "🤍 В избранное"}
+
+      <button
+        className={styles.likeButton}
+        onClick={toggleFavorite}
+        aria-label={isFavorite ? "Удалить из избранного" : "Добавить в избранное"}
+      >
+        {isFavorite ? "💔 Удалить" : "❤️ В избранное"}
       </button>
     </div>
   );
